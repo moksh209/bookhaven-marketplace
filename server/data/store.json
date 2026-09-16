@@ -1,6 +1,64 @@
 {
-  "users": [],
-  "products": [],
+  "users": [
+    {
+      "id": "usr-1789567993925-18",
+      "name": "Moksh pahwa",
+      "email": "moksh1234@gmail.com",
+      "password": "mokshpahwa",
+      "college": "VIT b",
+      "location": "VIT b ",
+      "phone": "8368187325",
+      "bio": "Student & book lover.",
+      "avatar": "https://api.dicebear.com/7.x/initials/svg?seed=Moksh%20pahwa&backgroundColor=b46e1c",
+      "rating": 5,
+      "joinedDate": "2026-09-16",
+      "paymentQrUrl": null,
+      "upiId": null,
+      "paymentInstructions": null,
+      "createdAt": "2026-09-16T14:13:13.925Z"
+    },
+    {
+      "id": "usr-1789568391882-515",
+      "name": "aman",
+      "email": "moksh3136@gmail.com",
+      "password": "8368187325",
+      "college": "vit bbhopal",
+      "location": "vit bbhopal",
+      "phone": "8368187325",
+      "bio": "Student & book lover.",
+      "avatar": "https://api.dicebear.com/7.x/initials/svg?seed=aman&backgroundColor=b46e1c",
+      "rating": 5,
+      "joinedDate": "2026-09-16",
+      "paymentQrUrl": null,
+      "upiId": null,
+      "paymentInstructions": null,
+      "createdAt": "2026-09-16T14:19:51.882Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "book-1789568244417-980",
+      "title": "Classmate registered spiral",
+      "author": "None",
+      "category": "General Reading & Literature",
+      "condition": "New",
+      "price": 0.78,
+      "originalPrice": 0.78,
+      "quantity": 1,
+      "description": "For smother writing",
+      "imageUrl": "/uploads/book-1789568225913-322552386.jpg",
+      "additionalImages": [
+        "/uploads/book-1789568242169-74909004.jpg"
+      ],
+      "sellerId": "usr-1789567993925-18",
+      "sellerName": "Moksh pahwa",
+      "college": "VIT b",
+      "isSold": false,
+      "soldAt": null,
+      "createdAt": "2026-09-16T14:17:24.417Z",
+      "updatedAt": "2026-09-16T14:17:24.417Z"
+    }
+  ],
   "categories": [
     {
       "id": "cat-1",
@@ -59,7 +117,151 @@
       "description": "Novels, literary classics, memoirs, and non-fiction"
     }
   ],
-  "orders": [],
-  "conversations": [],
-  "messages": []
+  "orders": [
+    {
+      "id": "ord-1789568400091-644",
+      "orderNumber": "ORD-97073",
+      "conversationId": "chat-1789568400091-590",
+      "bookId": "book-1789568244417-980",
+      "bookTitle": "Classmate registered spiral",
+      "bookAuthor": "None",
+      "bookPrice": 0.78,
+      "bookImage": "/uploads/book-1789568225913-322552386.jpg",
+      "buyerId": "usr-1789568391882-515",
+      "buyerName": "aman",
+      "buyerCollege": "vit bbhopal",
+      "sellerId": "usr-1789567993925-18",
+      "sellerName": "Moksh pahwa",
+      "sellerCollege": "VIT b",
+      "status": "Interested",
+      "paymentStatus": "Unpaid",
+      "paymentReferenceId": null,
+      "paymentProofUrl": null,
+      "paymentProofSubmittedAt": null,
+      "paymentConfirmedAt": null,
+      "createdAt": "2026-09-16T14:20:00.091Z",
+      "updatedAt": "2026-09-16T14:20:00.091Z"
+    }
+  ],
+  "conversations": [
+    {
+      "id": "chat-1789568400091-590",
+      "bookId": "book-1789568244417-980",
+      "bookTitle": "Classmate registered spiral",
+      "bookAuthor": "None",
+      "bookPrice": 0.78,
+      "bookImage": "/uploads/book-1789568225913-322552386.jpg",
+      "buyerId": "usr-1789568391882-515",
+      "buyerName": "aman",
+      "buyerCollege": "vit bbhopal",
+      "sellerId": "usr-1789567993925-18",
+      "sellerName": "Moksh pahwa",
+      "sellerCollege": "VIT b",
+      "lastMessage": "yes your payment of 0.78 dollar is recived",
+      "createdAt": "2026-09-16T14:20:00.091Z",
+      "updatedAt": "2026-09-16T14:23:48.078Z"
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg-1789568400091-1",
+      "conversationId": "chat-1789568400091-590",
+      "senderId": "system",
+      "senderName": "BookHaven System",
+      "text": "Conversation started between aman and Moksh pahwa for \"Classmate registered spiral\". You can discuss campus handoff, book condition, and complete manual online payment securely here.",
+      "attachmentUrl": null,
+      "messageType": "system",
+      "createdAt": "2026-09-16T14:20:00.091Z"
+    },
+    {
+      "id": "msg-1789568412189-136",
+      "conversationId": "chat-1789568400091-590",
+      "senderId": "usr-1789568391882-515",
+      "senderName": "aman",
+      "text": "hlo bro",
+      "attachmentUrl": null,
+      "messageType": "text",
+      "createdAt": "2026-09-16T14:20:12.189Z"
+    },
+    {
+      "id": "msg-1789568442744-463",
+      "conversationId": "chat-1789568400091-590",
+      "senderId": "usr-1789567993925-18",
+      "senderName": "Moksh pahwa",
+      "text": "Yes",
+      "attachmentUrl": null,
+      "messageType": "text",
+      "createdAt": "2026-09-16T14:20:42.744Z"
+    },
+    {
+      "id": "msg-1789568457871-176",
+      "conversationId": "chat-1789568400091-590",
+      "senderId": "usr-1789568391882-515",
+      "senderName": "aman",
+      "text": "do you want to buy",
+      "attachmentUrl": null,
+      "messageType": "text",
+      "createdAt": "2026-09-16T14:20:57.871Z"
+    },
+    {
+      "id": "msg-1789568466338-476",
+      "conversationId": "chat-1789568400091-590",
+      "senderId": "usr-1789567993925-18",
+      "senderName": "Moksh pahwa",
+      "text": "Yes",
+      "attachmentUrl": null,
+      "messageType": "text",
+      "createdAt": "2026-09-16T14:21:06.338Z"
+    },
+    {
+      "id": "msg-1789568490178-747",
+      "conversationId": "chat-1789568400091-590",
+      "senderId": "usr-1789568391882-515",
+      "senderName": "aman",
+      "text": "ok i will send you my qr code",
+      "attachmentUrl": null,
+      "messageType": "text",
+      "createdAt": "2026-09-16T14:21:30.178Z"
+    },
+    {
+      "id": "msg-1789568547954-324",
+      "conversationId": "chat-1789568400091-590",
+      "senderId": "usr-1789568391882-515",
+      "senderName": "aman",
+      "text": "pls pay  on my number pls 83681xxxxx",
+      "attachmentUrl": null,
+      "messageType": "text",
+      "createdAt": "2026-09-16T14:22:27.954Z"
+    },
+    {
+      "id": "msg-1789568571351-678",
+      "conversationId": "chat-1789568400091-590",
+      "senderId": "usr-1789567993925-18",
+      "senderName": "Moksh pahwa",
+      "text": "Ok",
+      "attachmentUrl": null,
+      "messageType": "text",
+      "createdAt": "2026-09-16T14:22:51.351Z"
+    },
+    {
+      "id": "msg-1789568599311-440",
+      "conversationId": "chat-1789568400091-590",
+      "senderId": "usr-1789567993925-18",
+      "senderName": "Moksh pahwa",
+      "text": "Done bro pls chek it",
+      "attachmentUrl": null,
+      "messageType": "text",
+      "createdAt": "2026-09-16T14:23:19.311Z"
+    },
+    {
+      "id": "msg-1789568628078-155",
+      "conversationId": "chat-1789568400091-590",
+      "senderId": "usr-1789568391882-515",
+      "senderName": "aman",
+      "text": "yes your payment of 0.78 dollar is recived",
+      "attachmentUrl": null,
+      "messageType": "text",
+      "createdAt": "2026-09-16T14:23:48.078Z"
+    }
+  ]
 }
