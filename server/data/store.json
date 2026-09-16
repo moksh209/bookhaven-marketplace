@@ -1,0 +1,65 @@
+{
+  "users": [],
+  "products": [],
+  "categories": [
+    {
+      "id": "cat-1",
+      "name": "Computer Science & Tech",
+      "slug": "computer-science",
+      "icon": "Code",
+      "description": "Programming, algorithms, web dev, and IT textbooks"
+    },
+    {
+      "id": "cat-2",
+      "name": "Engineering & Mathematics",
+      "slug": "engineering-math",
+      "icon": "Cpu",
+      "description": "Calculus, linear algebra, mechanical, electrical, and civil"
+    },
+    {
+      "id": "cat-3",
+      "name": "Medicine & Healthcare",
+      "slug": "medicine-health",
+      "icon": "Activity",
+      "description": "Anatomy, nursing, pharmacy, biology, and physiology"
+    },
+    {
+      "id": "cat-4",
+      "name": "Business & Economics",
+      "slug": "business-economics",
+      "icon": "TrendingUp",
+      "description": "Finance, accounting, marketing, management, and micro/macro"
+    },
+    {
+      "id": "cat-5",
+      "name": "Humanities & Social Sciences",
+      "slug": "humanities-social",
+      "icon": "BookOpen",
+      "description": "Psychology, sociology, history, philosophy, and political science"
+    },
+    {
+      "id": "cat-6",
+      "name": "Natural Sciences",
+      "slug": "natural-sciences",
+      "icon": "Atom",
+      "description": "Physics, chemistry, biochemistry, and environmental science"
+    },
+    {
+      "id": "cat-7",
+      "name": "Law & Public Policy",
+      "slug": "law-policy",
+      "icon": "Scale",
+      "description": "Constitutional law, casebooks, criminal justice, and legal studies"
+    },
+    {
+      "id": "cat-8",
+      "name": "General Reading & Literature",
+      "slug": "general-reading",
+      "icon": "Bookmark",
+      "description": "Novels, literary classics, memoirs, and non-fiction"
+    }
+  ],
+  "orders": [],
+  "conversations": [],
+  "messages": []
+}
