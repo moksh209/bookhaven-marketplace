@@ -29,9 +29,9 @@ export function AuthProvider({ children }) {
   const [authModalMode, setAuthModalMode] = useState('login'); // 'login' | 'signup' | 'forgot'
   const toast = useToast();
 
-  const login = async (email, password) => {
+  const login = async (email, password, extra = {}) => {
     try {
-      const res = await api.login(email, password);
+      const res = await api.login(email, password, extra);
       setUser(res.user);
       localStorage.setItem('bookhaven_user', JSON.stringify(res.user));
       setIsAuthModalOpen(false);

@@ -14,47 +14,122 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATA_DIR = path.join(__dirname, 'data');
 const DB_FILE = path.join(DATA_DIR, 'store.json');
+const TMP_DB_FILE = path.join('/tmp', 'bookhaven_store.json');
+
+let activeDbFile = DB_FILE;
+let memoryStore = null;
+
+function getInitialData() {
+  return {
+    users: defaultUsers,
+    products: defaultProducts,
+    categories: defaultCategories,
+    orders: defaultOrders,
+    conversations: defaultConversations,
+    messages: defaultMessages
+  };
+}
 
 function initDb() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+  const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+
+  // If running in serverless, prioritize /tmp writable location
+  if (isServerless) {
+    activeDbFile = TMP_DB_FILE;
   }
 
-  if (!fs.existsSync(DB_FILE)) {
-    const initialData = {
-      users: defaultUsers,
-      products: defaultProducts,
-      categories: defaultCategories,
-      orders: defaultOrders,
-      conversations: defaultConversations,
-      messages: defaultMessages
-    };
-    fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2), 'utf-8');
+  // Try reading bundled data first to seed memoryStore
+  try {
+    if (fs.existsSync(DB_FILE)) {
+      const raw = fs.readFileSync(DB_FILE, 'utf-8');
+      memoryStore = JSON.parse(raw);
+    }
+  } catch (e) {
+    // Ignore read error from bundled store
+  }
+
+  if (!memoryStore) {
+    // Check if tmp store exists
+    try {
+      if (fs.existsSync(TMP_DB_FILE)) {
+        const raw = fs.readFileSync(TMP_DB_FILE, 'utf-8');
+        memoryStore = JSON.parse(raw);
+      }
+    } catch (e) {}
+  }
+
+  if (!memoryStore) {
+    memoryStore = getInitialData();
+  }
+
+  // Try persisting initial data to active path if possible
+  try {
+    if (!isServerless && !fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    if (!fs.existsSync(activeDbFile)) {
+      fs.writeFileSync(activeDbFile, JSON.stringify(memoryStore, null, 2), 'utf-8');
+    }
+  } catch (err) {
+    // If local write fails, switch to /tmp
+    activeDbFile = TMP_DB_FILE;
+    try {
+      fs.writeFileSync(TMP_DB_FILE, JSON.stringify(memoryStore, null, 2), 'utf-8');
+    } catch (tmpErr) {
+      // Memory store is active, so we continue safely
+    }
   }
 }
 
 initDb();
 
 function readDb() {
-  try {
-    const raw = fs.readFileSync(DB_FILE, 'utf-8');
-    const data = JSON.parse(raw);
-    if (!data.conversations) data.conversations = [];
-    if (!data.messages) data.messages = [];
-    if (!data.orders) data.orders = [];
-    if (!data.products) data.products = [];
-    if (!data.users) data.users = [];
-    if (!data.categories) data.categories = defaultCategories;
-    return data;
-  } catch (err) {
-    console.error('Error reading DB, re-initializing...', err);
-    initDb();
-    return JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
+  if (memoryStore) {
+    return memoryStore;
   }
+
+  try {
+    if (fs.existsSync(activeDbFile)) {
+      const raw = fs.readFileSync(activeDbFile, 'utf-8');
+      memoryStore = JSON.parse(raw);
+    } else if (fs.existsSync(DB_FILE)) {
+      const raw = fs.readFileSync(DB_FILE, 'utf-8');
+      memoryStore = JSON.parse(raw);
+    }
+  } catch (err) {
+    console.warn('[DB] Could not read file, using seed data:', err.message);
+  }
+
+  if (!memoryStore) {
+    memoryStore = getInitialData();
+  }
+
+  if (!memoryStore.conversations) memoryStore.conversations = [];
+  if (!memoryStore.messages) memoryStore.messages = [];
+  if (!memoryStore.orders) memoryStore.orders = [];
+  if (!memoryStore.products) memoryStore.products = [];
+  if (!memoryStore.users) memoryStore.users = [];
+  if (!memoryStore.categories) memoryStore.categories = defaultCategories;
+
+  return memoryStore;
 }
 
 function writeDb(data) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  memoryStore = data;
+
+  try {
+    fs.writeFileSync(activeDbFile, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (err) {
+    // If writing to original DB_FILE fails (e.g. read-only filesystem in Vercel), fall back to /tmp
+    if (activeDbFile !== TMP_DB_FILE) {
+      activeDbFile = TMP_DB_FILE;
+      try {
+        fs.writeFileSync(TMP_DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+      } catch (tmpErr) {
+        // In-memory cache is maintained, so app continues without crashing
+      }
+    }
+  }
 }
 
 export const db = {

@@ -29,6 +29,9 @@ export default function AuthModal() {
   const [captchaAnswer, setCaptchaAnswer] = useState('');
   const [loadingCaptcha, setLoadingCaptcha] = useState(false);
 
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [resending, setResending] = useState(false);
+
   const fetchCaptcha = async () => {
     setLoadingCaptcha(true);
     try {
@@ -44,20 +47,54 @@ export default function AuthModal() {
   };
 
   useEffect(() => {
-    if (isAuthModalOpen && authModalMode === 'signup') {
+    if (isAuthModalOpen && (authModalMode === 'signup' || authModalMode === 'login')) {
       fetchCaptcha();
     }
   }, [isAuthModalOpen, authModalMode]);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setTimeout(() => {
+      setResendCooldown((prev) => prev - 1);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [resendCooldown]);
+
+  const handleResendVerification = async () => {
+    if (!email || !email.trim()) {
+      toast.error('Please enter your email address first.');
+      return;
+    }
+    setResending(true);
+    try {
+      const res = await api.resendVerification(email.trim());
+      toast.success(res.message);
+      setResendCooldown(res.nextAllowedInSeconds || 60);
+    } catch (err) {
+      toast.error(err.message || 'Failed to resend verification email');
+    } finally {
+      setResending(false);
+    }
+  };
 
   if (!isAuthModalOpen) return null;
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+
+    if (!captchaAnswer.trim()) {
+      toast.error('Please answer the human verification question.');
+      return;
+    }
+
     setSubmitting(true);
     try {
-      await login(email, password);
+      await login(email, password, {
+        captchaToken,
+        captchaAnswer: parseInt(captchaAnswer, 10)
+      });
     } catch (err) {
-      // Toast handled by context
+      fetchCaptcha(); // Refresh captcha on failure
     } finally {
       setSubmitting(false);
     }
@@ -179,6 +216,37 @@ export default function AuthModal() {
                 </div>
               </div>
 
+              {/* Anti-Bot Human Verification for Online Usage */}
+              <div className="p-3 bg-amber-50/80 border border-amber-200 rounded-2xl space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5 font-bold text-amber-900">
+                    <ShieldCheck className="w-4 h-4 text-amber-700" />
+                    <span>Anti-Bot Verification</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={fetchCaptcha}
+                    className="text-[11px] text-amber-700 hover:underline flex items-center gap-1"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    <span>New Question</span>
+                  </button>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-mono font-bold text-stone-800 bg-white px-3 py-1.5 rounded-lg border border-amber-200">
+                    {loadingCaptcha ? 'Loading...' : captchaQuestion}
+                  </span>
+                  <input
+                    type="number"
+                    required
+                    value={captchaAnswer}
+                    onChange={(e) => setCaptchaAnswer(e.target.value)}
+                    placeholder="Your answer"
+                    className="flex-1 px-3 py-1.5 bg-white border border-stone-300 rounded-lg text-xs font-bold focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  />
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={submitting}
@@ -188,7 +256,7 @@ export default function AuthModal() {
                 <ArrowRight className="w-4 h-4" />
               </button>
 
-              <div className="text-center pt-2">
+              <div className="text-center pt-2 space-y-1">
                 <p className="text-xs text-stone-500">
                   New to BookHaven?{' '}
                   <button
@@ -199,6 +267,18 @@ export default function AuthModal() {
                     Create a Free Account
                   </button>
                 </p>
+                <div>
+                  <button
+                    type="button"
+                    disabled={resending || resendCooldown > 0}
+                    onClick={handleResendVerification}
+                    className="text-[11px] text-stone-400 hover:text-amber-800 underline transition disabled:opacity-50"
+                  >
+                    {resendCooldown > 0
+                      ? `Resend verification link in ${resendCooldown}s`
+                      : 'Resend email verification link'}
+                  </button>
+                </div>
               </div>
             </form>
           )}

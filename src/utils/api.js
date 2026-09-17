@@ -47,13 +47,20 @@ async function request(endpoint, options = {}) {
 export const api = {
   // Auth & Captcha
   getCaptchaChallenge: () => request('/auth/captcha-challenge'),
-  login: (email, password) => request('/auth/login', {
-    method: 'POST',
-    body: JSON.stringify({ email, password }),
-  }),
+  login: (email, password, extra = {}) => {
+    const payload = typeof email === 'object' ? email : { email, password, ...extra };
+    return request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
   signup: (userData) => request('/auth/signup', {
     method: 'POST',
     body: JSON.stringify(userData),
+  }),
+  resendVerification: (email) => request('/auth/resend-verification', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
   }),
   forgotPassword: (email, newPassword) => request('/auth/forgot-password', {
     method: 'POST',
